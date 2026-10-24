@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" data-language="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI JanSeva — सरकारी योजनाओं और नागरिक सेवाओं की जानकारी के लिए citizen assistance platform.">
+  <title>{% block title %}AI JanSeva – Smart India Assistant{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">J</span><span>AI <b>JanSeva</b><small>Smart India Assistant</small></span></a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+  <nav id="mainNav">
+    <a href="{{ url_for('index') }}#problems" data-i18n="nav_problems">Problems</a>
+    <a href="{{ url_for('index') }}#schemes" data-i18n="nav_schemes">Schemes</a>
+    <a href="{{ url_for('index') }}#eligibility" data-i18n="nav_eligibility">Eligibility</a>
+    <a href="{{ url_for('index') }}#assistant" data-i18n="nav_help">AI Help</a>
+    <label class="language-picker" aria-label="Choose language">
+      <span class="language-globe">◎</span>
+      <select id="languageSelect" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="bn">বাংলা</option>
+        <option value="ta">தமிழ்</option>
+        <option value="te">తెలుగు</option>
+      </select>
+    </label>
+    {% if current_user %}
+      <a href="{{ url_for('saved') }}" data-i18n="nav_saved">Saved Schemes</a>
+      <span class="nav-user" data-i18n="nav_greeting">Welcome, {{ current_user }}</span>
+      <a class="nav-cta" href="{{ url_for('logout') }}" data-i18n="nav_logout">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" data-i18n="nav_login">Login</a>
+      <a class="nav-cta" href="{{ url_for('register') }}" data-i18n="nav_register">Register</a>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+      {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <div><a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-mark">J</span><span>AI <b>JanSeva</b><small>Smart India Assistant</small></span></a><p data-i18n="footer_tagline">Government information, made simple.</p></div>
+  <div class="footer-note" data-i18n="footer_note">AI JanSeva is an educational project, not a government website. Verify eligibility, benefits and deadlines on the relevant official portal.</div>
+  <div class="copyright">© 2026 AI JanSeva · Educational prototype</div>
+</footer>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

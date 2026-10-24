@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Saved Schemes · AI JanSeva{% endblock %}
+{% block content %}
+<section class="section-wrap section-block saved-page">
+  <div class="eyebrow">YOUR COLLECTION</div><h1>Saved <span>schemes.</span></h1><p class="saved-intro">आपके द्वारा save की गई योजनाएँ यहाँ दिखाई देती हैं।</p>
+  {% if schemes %}
+  <div class="scheme-grid">
+    {% for s in schemes %}
+    <article class="scheme-card"><div class="scheme-card-top"><span class="scheme-symbol">☆</span><span class="category-pill">{{ s[1] }}</span></div><h3>{{ s[0] }}</h3><p>{{ s[2] }}</p><div class="scheme-actions"><a class="text-link" href="{{ s[3] }}" target="_blank" rel="noopener noreferrer">Official portal ↗</a><form method="post" action="{{ url_for('save_scheme', scheme_name=s[0]) }}"><button class="save-btn" type="submit">Remove</button></form></div></article>
+    {% endfor %}
+  </div>
+  {% else %}<div class="empty-state"><h3>अभी कोई योजना save नहीं है।</h3><p>योजनाओं की सूची में जाकर ☆ Save चुनें।</p><a class="btn btn-dark" href="{{ url_for('index') }}#schemes">योजनाएँ खोजें</a></div>{% endif %}
+</section>
+{% endblock %}

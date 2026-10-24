@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero section-wrap">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="pulse"></span> <span data-i18n="hero_eyebrow">SMART CITIZEN ASSISTANT</span></div>
+    <h1><span class="hero-title-main" data-i18n="hero_title">Government help,</span><br><span data-i18n="hero_title_accent">made simple.</span></h1>
+    <p class="hero-lead" data-i18n="hero_lead">AI JanSeva helps people understand government schemes, public services and everyday citizen problems in simple language.</p>
+    <div class="hero-actions"><a class="btn btn-dark" href="#schemes" data-i18n="hero_cta_schemes">Explore Schemes <span>↗</span></a><a class="btn btn-light" href="#eligibility" data-i18n="hero_cta_eligibility">Check Eligibility</a></div>
+    <div class="hero-proof"><span data-i18n="hero_proof_1">✓ 40+ scheme and service cards</span><span data-i18n="hero_proof_2">✓ Official portal links</span><span data-i18n="hero_proof_3">✓ Multiple languages</span></div>
+  </div>
+  <div class="hero-visual">
+    <div class="orb orb-one"></div><div class="orb orb-two"></div>
+    <div class="assistant-card">
+      <div class="assistant-top"><span class="assistant-icon">✦</span><div><b data-i18n="assistant_name">JanSeva AI</b><small data-i18n="assistant_subtitle">Citizen Assistant</small></div><span class="online-dot"></span></div>
+      <div class="chat-bubble user-bubble" data-i18n="hero_chat_user">I am a student. Are there scholarships?</div>
+      <div class="chat-bubble bot-bubble" data-i18n="hero_chat_bot">You may find suitable scholarship opportunities depending on your state, category, course and family income.</div>
+      <div class="mini-stat-row"><div><b>10+</b><small data-i18n="stat_categories">Categories</small></div><div><b>40+</b><small data-i18n="stat_schemes">Scheme cards</small></div><div><b>24/7</b><small data-i18n="stat_access">Website access</small></div></div>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section-wrap problem-section" id="problems">
+  <div class="problem-heading">
+    <div class="eyebrow" data-i18n="problems_eyebrow">REAL LIFE PROBLEMS</div>
+    <h2 data-i18n="problems_title">One place for everyday help.</h2>
+    <p data-i18n="problems_intro">Common problems faced by citizens and students in India.</p>
+  </div>
+  <div class="problem-grid">
+    <article class="problem-card"><span>🎓</span><h3 data-i18n="problem_scholarships">Scholarships</h3><p data-i18n="problem_scholarships_desc">Understand scholarship options and basic eligibility requirements.</p></article>
+    <article class="problem-card"><span>🪪</span><h3 data-i18n="problem_documents">Documents</h3><p data-i18n="problem_documents_desc">Get guidance about common documents and citizen services.</p></article>
+    <article class="problem-card"><span>✚</span><h3 data-i18n="problem_health">Healthcare</h3><p data-i18n="problem_health_desc">Find information about public healthcare schemes and services.</p></article>
+    <article class="problem-card"><span>🌾</span><h3 data-i18n="problem_farmers">Farm Support</h3><p data-i18n="problem_farmers_desc">Explore agricultural assistance and farmer-oriented schemes.</p></article>
+  </div>
+</section>
+<section class="trust-strip"><span data-i18n="trust_label">INFORMATION CATEGORIES</span><b data-i18n="cat_education">Education</b><i></i><b data-i18n="cat_healthcare">Healthcare</b><i></i><b data-i18n="cat_agriculture">Agriculture</b><i></i><b data-i18n="cat_employment">Employment</b><i></i><b data-i18n="cat_services">Citizen Services</b></section>
+
+<section class="section-wrap section-block" id="schemes">
+  <div class="section-heading">
+    <div><div class="eyebrow" data-i18n="schemes_eyebrow">GOVERNMENT SCHEMES</div><h2><span class="section-title-main" data-i18n="schemes_title">Everything you need,</span><br><span data-i18n="schemes_title_accent">in one place.</span></h2></div>
+    <p data-i18n="schemes_intro">Search schemes, choose a category, and verify the rules on the official website before applying.</p>
+  </div>
+  <form class="search-bar" method="get" action="{{ url_for('index') }}#schemes">
+    <span class="search-icon">⌕</span><input type="search" name="q" value="{{ query }}" placeholder="Search schemes, services or keywords..." data-i18n-placeholder="search_placeholder" aria-label="योजना खोजें">
+    <select name="category" aria-label="Choose category" data-i18n-aria="category_aria">
+      <option value="all" {% if selected_category == 'all' %}selected{% endif %} data-i18n="all_categories">All categories</option>
+      {% for cat in categories %}<option value="{{ cat|lower }}" {% if selected_category == cat|lower %}selected{% endif %}>{{ cat }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-dark" type="submit" data-i18n="search_button">Search</button>
+  </form>
+  <div class="results-meta"><span><b>{{ schemes|length }}</b> results · कुल {{ total }} scheme/service cards</span><a href="{{ url_for('index') }}#schemes" data-i18n="reset_filters">Reset filters ↗</a></div>
+  {% if schemes %}
+  <div class="scheme-grid">
+    {% for s in schemes %}
+    <article class="scheme-card">
+      <div class="scheme-card-top"><span class="scheme-symbol">{{ {'Education':'🎓','Documents':'🪪','Healthcare':'✚','Farmers':'🌾','Housing':'🏠','Jobs':'💼','Women':'🌷','Finance':'₹','Business':'🚀','Digital':'🌐'}.get(s[1], '✦') }}</span><span class="category-pill">{{ s[1] }}</span></div>
+      <h3>{{ s[0] }}</h3><p>{{ s[2] }}</p>
+      <div class="scheme-actions"><a class="text-link" href="{{ s[3] }}" target="_blank" rel="noopener noreferrer">Official portal <span>↗</span></a>
+      {% if current_user %}<form method="post" action="{{ url_for('save_scheme', scheme_name=s[0]) }}"><button class="save-btn" type="submit">{{ '★ Saved' if s[0] in saved else '☆ Save' }}</button></form>{% else %}<a class="save-btn" href="{{ url_for('login') }}">☆ Save</a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty-state"><span>⌕</span><h3>कोई योजना नहीं मिली</h3><p>दूसरा keyword या category चुनकर देखें।</p><a class="btn btn-light" href="{{ url_for('index') }}#schemes">सभी योजनाएँ देखें</a></div>
+  {% endif %}
+</section>
+
+<section class="eligibility-section" id="eligibility">
+  <div class="section-wrap eligibility-layout">
+    <div class="eligibility-copy"><div class="eyebrow" data-i18n="eligibility_eyebrow">SMART PROFILE</div><h2><span class="eligibility-title-main" data-i18n="eligibility_title">Build your citizen</span><br><span data-i18n="eligibility_title_accent">profile.</span></h2><p data-i18n="eligibility_intro">Enter basic information to discover schemes and official links you may want to check. Suggestions are not an official eligibility decision.</p>
+      <div class="check-points"><span data-i18n="eligibility_point_1">✓ Suggested areas to check</span><span data-i18n="eligibility_point_2">✓ Official links included</span><span data-i18n="eligibility_point_3">✓ Profile details are not stored</span></div>
+    </div>
+    <form class="profile-form" id="eligibilityForm">
+      <div class="form-title"><span class="form-icon">◈</span><div><h3 data-i18n="profile_title">Citizen Information</h3><p data-i18n="profile_subtitle">Enter your basic details</p></div></div>
+      <div class="form-grid">
+        <label><span data-i18n="field_age">Age</span><input type="number" name="age" min="0" max="120" required placeholder="उदा. 20"></label>
+        <label><span data-i18n="field_income">Annual family income (₹)</span><input type="number" name="income" min="0" required placeholder="उदा. 180000"></label>
+        <label><span data-i18n="field_occupation">Occupation</span><select name="occupation" required><option value="">चुनें</option><option value="student">Student / छात्र</option><option value="farmer">Farmer / किसान</option><option value="employee">Employee / कर्मचारी</option><option value="job seeker">Job seeker / रोजगार खोज रहे हैं</option><option value="business">Business / व्यवसाय</option><option value="self-employed">Self-employed</option><option value="other">Other</option></select></label>
+        <label><span data-i18n="field_state">State</span><input type="text" name="state" required placeholder="उदा. Bihar"></label>
+        <label class="full-width"><span data-i18n="field_category">Category (optional)</span><select name="category"><option value="">नहीं बताना चाहते</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select></label>
+      </div>
+      <button class="btn btn-dark full-btn" type="submit" data-i18n="analyze_button">Analyze Profile <span>↗</span></button>
+      <div id="eligibilityResults" class="api-results" aria-live="polite"></div>
+      <small class="privacy-note" data-i18n="privacy_note">Your information is used only for this request.</small>
+    </form>
+  </div>
+</section>
+
+<section class="section-wrap section-block assistant-section" id="assistant">
+  <div class="section-heading"><div><div class="eyebrow" data-i18n="help_eyebrow">JANSEVA HELP</div><h2><span class="help-title-main" data-i18n="help_title">Ask a question,</span><br><span data-i18n="help_title_accent">get a simple answer.</span></h2></div><p data-i18n="help_intro">Ask about schemes, documents, scholarships, healthcare and farmer support. This built-in guide is not connected to a live generative AI model.</p></div>
+  <div class="assistant-workspace">
+    <div class="assistant-intro"><div class="big-assistant-icon">✦</div><h3 data-i18n="help_card_title">Hello! I am JanSeva Help.</h3><p data-i18n="help_card_intro">Ask about government schemes, documents, scholarships, healthcare and farmer support.</p><div class="suggested-prompts"><button type="button" data-prompt="I need scholarship information" data-i18n="prompt_scholarship">🎓 Scholarships</button><button type="button" data-prompt="How can I access Aadhaar and documents?" data-i18n="prompt_documents">🪪 Documents</button><button type="button" data-prompt="Tell me about farmer support schemes" data-i18n="prompt_farmers">🌾 Farmer support</button><button type="button" data-prompt="I need healthcare scheme information" data-i18n="prompt_health">✚ Healthcare</button></div></div>
+    <div class="chat-panel"><div class="chat-panel-head"><span class="online-dot"></span><div><b data-i18n="chat_panel_title">JanSeva Help</b><small data-i18n="chat_panel_subtitle">Built-in information guide</small></div></div><div id="chatMessages" class="chat-messages"><div class="message bot-message" data-i18n="chat_welcome">Hello! What can I help you with today?</div></div><form id="chatForm" class="chat-input"><input id="chatInput" name="message" placeholder="Ask about a government service..." data-i18n-placeholder="chat_placeholder" required autocomplete="off"><button type="submit" aria-label="Send message">➤</button></form><small class="chat-disclaimer" data-i18n="chat_disclaimer">Please verify information on the official government portal.</small></div>
+  </div>
+</section>
+
+<section class="section-wrap section-block faq-section">
+  <div class="section-heading"><div><div class="eyebrow" data-i18n="faq_eyebrow">HELP CENTER</div><h2><span class="faq-title-main" data-i18n="faq_title">Frequently asked</span><br><span data-i18n="faq_title_accent">questions.</span></h2></div><p data-i18n="faq_intro">A few important things to know before you begin.</p></div>
+  <div class="faq-list">
+    <details><summary data-i18n="faq1_q">Is this an official government website?</summary><p data-i18n="faq1_a">No. AI JanSeva is an educational citizen-assistance prototype, not a government department or official portal.</p></details>
+    <details><summary data-i18n="faq2_q">Does this website confirm my eligibility?</summary><p data-i18n="faq2_a">No. It provides initial suggestions only. Eligibility depends on current scheme rules and your circumstances.</p></details>
+    <details><summary data-i18n="faq3_q">Can I save my favourite schemes?</summary><p data-i18n="faq3_a">Yes. Register and log in to add schemes to your Saved Schemes list.</p></details>
+    <details><summary data-i18n="faq4_q">Is AI Help connected to live AI?</summary><p data-i18n="faq4_a">This version uses built-in topic-based guidance. Live AI requires a provider API and secure backend configuration.</p></details>
+    <details><summary data-i18n="faq5_q">How can I protect my personal information?</summary><p data-i18n="faq5_a">Never share OTPs, passwords, UPI PINs or bank PINs. Use official portals for applications.</p></details>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Register' if mode == 'register' else 'Login' }} · AI JanSeva{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-decoration"><div class="eyebrow">WELCOME TO JANSEVA</div><h1>{{ 'अपना account बनाएँ।' if mode == 'register' else 'वापस स्वागत है।' }}</h1><p>सरकारी योजनाओं को save करने और अपनी पसंद की जानकारी एक जगह रखने के लिए AI JanSeva account का उपयोग करें।</p><div class="auth-note">🔒 आपका password सुरक्षित hash के रूप में store होता है।</div></div>
+  <form class="auth-card" method="post">
+    <span class="form-icon">◈</span><h2>{{ 'Register' if mode == 'register' else 'Login' }}</h2><p>{{ 'कुछ जानकारी भरकर account बनाएँ।' if mode == 'register' else 'अपने account में sign in करें।' }}</p>
+    {% if mode == 'register' %}<label>पूरा नाम<input type="text" name="name" required minlength="2" autocomplete="name" placeholder="आपका नाम"></label>{% endif %}
+    <label>Email address<input type="email" name="email" required autocomplete="email" placeholder="you@example.com"></label>
+    <label>Password<input type="password" name="password" required minlength="8" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="कम से कम 8 characters"></label>
+    <button class="btn btn-dark full-btn" type="submit">{{ 'Create account' if mode == 'register' else 'Login' }} ↗</button>
+    <div class="auth-switch">{% if mode == 'register' %}पहले से account है? <a href="{{ url_for('login') }}">Login करें</a>{% else %}नया account चाहिए? <a href="{{ url_for('register') }}">Register करें</a>{% endif %}</div>
+  </form>
+</section>
+{% endblock %}
